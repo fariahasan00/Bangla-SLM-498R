@@ -15,9 +15,9 @@ import torch.nn.functional as F
 
 @dataclass
 class SLMConfig:
-    vocab_size: int = 16000
+    vocab_size: int = 8000
     block_size: int = 512
-    n_layer: int = 6
+    n_layer: int = 8
     n_head: int = 6
     n_embd: int = 384
     dropout: float = 0.0        # keep 0.0 while data-limited; raise if you overfit
@@ -226,18 +226,13 @@ class BanglaSLM(nn.Module):
 
 
 if __name__ == "__main__":
-    for vocab in (16000, 32000):
-        cfg = SLMConfig(vocab_size=vocab)
-        m = BanglaSLM(cfg)
-        print(f"vocab={vocab}: total={m.num_params()/1e6:.2f}M  "
-              f"non-emb={m.num_params(True)/1e6:.2f}M")
-    cfg = SLMConfig(vocab_size=16000)
+    cfg = SLMConfig(vocab_size=8000)  # Your actual vocab
     m = BanglaSLM(cfg)
+    print(f"total={m.num_params()/1e6:.2f}M non-emb={m.num_params(True)/1e6:.2f}M")
+    
     x = torch.randint(0, cfg.vocab_size, (2, 128))
     logits, loss = m(x, x)
-    print("logits", tuple(logits.shape), "loss", round(loss.item(), 3),
-          "(expect ~ln(vocab) =", round(math.log(cfg.vocab_size), 3), ")")
+    print("logits", tuple(logits.shape), "loss", round(loss.item(), 3))
+    
     out = m.generate(x[:, :4], max_new_tokens=5)
     print("generate ->", tuple(out.shape))
-    lp, n = m.sequence_logprob(x[0][:32], prefix_len=10)
-    print("sequence_logprob:", round(lp, 2), "over", n, "tokens")
