@@ -1,0 +1,28 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# --- Model checkpoints ---
+# 207MB each, over GitHub's 100MB/file limit. Host these on Hugging Face Hub.
+checkpoints/
+*.pt
+*.pth
+
+# --- Training data ---
+# Tokenized bins (754MB) and the raw corpus (6GB) are far too large for Git.
+# train_slm.py downloads them from Hugging Face Hub on demand; see --hf-repo-id.
+*.bin
+*.zip
+data/
+data-*/
+bangla_corpus*.txt
+
+# --- OS cruft ---
+Thumbs.db
+.DS_Store
+
+# --- GEC evaluation cache ---
+# Created automatically by gec_eval.py; safe to delete.
+gec_cache/
