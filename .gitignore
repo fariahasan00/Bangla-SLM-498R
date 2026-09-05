@@ -22,3 +22,7 @@ bangla_corpus*.txt
 # --- OS cruft ---
 Thumbs.db
 .DS_Store
+
+# --- GEC evaluation cache ---
+# Created automatically by gec_eval.py; safe to delete.
+gec_cache/
